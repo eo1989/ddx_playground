@@ -141,7 +141,7 @@ class BSOpt:
         """
         Compute the quantity d2 of BSM options pricing
         """
-        return self.d1(S) - self.v * np.sqrt(self.T)
+        return self.d1() - self.v * np.sqrt(self.T)
 
     def price(self):
         """
@@ -278,8 +278,8 @@ class BSOpt:
     def greeks(self):
         return {
             "Lambda": np.round(BSOpt.Lambda(self), 2),
-            "Delta": np.round(BSOpt.Delta(self), 2),
-            "Gamma": np.round(BSOpt.Gamma(self), 2),
-            "Theta": np.round(BSOpt.Theta(self), 2),
-            "Vega": np.round(BSOpt.Vega(self), 2),
+             "Delta": np.round(BSOpt.Delta(self),  2),
+             "Gamma": np.round(BSOpt.Gamma(self),  2),
+             "Theta": np.round(BSOpt.Theta(self),  2),
+              "Vega": np.round(BSOpt.Vega(self),   2),
         }
