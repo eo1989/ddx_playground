@@ -15,5 +15,5 @@ def main_gui():
 	Gui.root.mainloop()
 
 
-if __name__ = "__main__":
+if __name__ == "__main__":
     main_gui()
