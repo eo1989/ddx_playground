@@ -283,10 +283,6 @@ class BSOpt:
         }
 
     def underlying_set(self, *argv):
-        """underlying_set.
-
-        :param argv:
-        """
         try:
             S = argv[0]
         except:
@@ -306,12 +302,6 @@ class BSOptStrat:
     """BSOptStrat."""
 
     def __init__(self, S = 100, r = 0.03, q = 0):
-        """__init__.
-
-        :param S:
-        :param r:
-        :param q:
-        """
         self.S = S
         self.r = r
         self.q = q
@@ -321,24 +311,10 @@ class BSOptStrat:
         self.payoffs_exp_df = pd.DataFrame()
 
     def init_payoffs(S):
-        """init_payoffs.
-
-        :param S:
-        """
         ss = pd.Series([0] * len(BSOpt.underlying_set(0, S)), index = BSOpt.underlying_set(0, S))
         return ss
 
     def call(self, NP=+1, K = 100, T = 0.25, v = 0.3, M = 100, optprice = None):
-        """[TODO:Creating a call option]
-
-        Args:
-            NP: [TODO:Net Position, >0 if long, <0 if short]
-            K: [TODO:Strike price]
-            T: [TODO:Time-to-Maturity (years)]
-            v: [TODO:Volatility]
-            M: [TODO:Multiplier of the Option (number of stocks allowed to buy/sell)]
-            optprice ([TODO:parameter]): [TODO:Create call option with current data]
-        """
         option = BSOpt("C", self.S, K, T, self.r, v, q = self.q)
 
         # call payoff before exp
@@ -354,7 +330,7 @@ class BSOptStrat:
         - if NP > 0, price must be paid (debit), then:
           payoffs = option.setprices() * NP * M - Call price * NP * M
         - If NP < 0, the price is to be received, then:
-          payoffs = Call price * abs(NP) * M - option.setprices() * abs(NP) * M 
+          payoffs = Call price * abs(NP) * M - option.setprices() * abs(NP) * M
                   = option.setprices() * NP * M  - Call price * NP * M
 
         Summary: ( option.setprices() - call_price ) * NP * M
@@ -386,7 +362,7 @@ class BSOptStrat:
         self.update_payoffs(payoffs, T=T)
 
         # create dict w/ the data of the given option
-        inst = {"CP": CP
+        inst = {"CP": CP,
                 "NP": NP,
                 "K": K,
                 "T": T,
@@ -415,13 +391,13 @@ class BSOptStrat:
         # - Put:  (P - max(S - K; 0)) * NP * M
         payoffs_exp = (option.setprices() - price) * NP * M
 
-        # Update the dataframe of payoff at maturity of single options with the new current inserted option 
+        # Update the dataframe of payoff at maturity of single options with the new current inserted option
         self.update_payoffs_exp_df(payoffs_exp)
 
         # Update the strategy payoff at maturity with the one of the new current inserted option
         self.update_payoffs(payoffs_exp, T = 0)
 
-    
+
     def update_payoffs_exp_df(self, payoffs_exp):
         # concat new option payoff with current df
         self.payoffs_exp_df = pd.concat([self.payoffs_exp_df, pd.DataFrame(payoffs_exp)], axis = 1)
@@ -432,8 +408,8 @@ class BSOptStrat:
     def describe_strat(self):  # , stratname=None):
         '''
         This method can be called once the option has been set.
-        Here, all option data saved so far in the list of instrument are now saved 
-        in a dictionary and the cost of entering the strategy is also computed 
+        Here, all option data saved so far in the list of instrument are now saved
+        in a dictionary and the cost of entering the strategy is also computed
         '''
         # create dict of options inserted in the strategy
         StratData = dict()
