@@ -8,7 +8,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from models.blackscholes_strategy import BSOptStrat
 
 class PlotGUI():
-    def __init__(self, root, colorpalette = 'light') -> None:
+    def __init__(self, root, colorpalette = 'light'):
         """
         root:          tkinter object
         colorpalette:  GUI color palette. Currently light and dark mode supported.

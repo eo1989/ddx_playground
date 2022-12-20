@@ -50,7 +50,9 @@ class BSOpt:
         if S > 0:
             return S
         else:
-            raise ValueError("Second class argument 'S' (strike price) must be greater than 0")
+            raise ValueError(
+                "Second class argument 'S' (strike price) must be greater than 0"
+            )
 
     @staticmethod
     def valid_strike(K):
@@ -278,8 +280,8 @@ class BSOpt:
     def greeks(self):
         return {
             "Lambda": np.round(BSOpt.Lambda(self), 2),
-             "Delta": np.round(BSOpt.Delta(self),  2),
-             "Gamma": np.round(BSOpt.Gamma(self),  2),
-             "Theta": np.round(BSOpt.Theta(self),  2),
-              "Vega": np.round(BSOpt.Vega(self),   2),
+            "Delta": np.round(BSOpt.Delta(self), 2),
+            "Gamma": np.round(BSOpt.Gamma(self), 2),
+            "Theta": np.round(BSOpt.Theta(self), 2),
+            "Vega": np.round(BSOpt.Vega(self), 2),
         }

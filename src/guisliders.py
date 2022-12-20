@@ -7,15 +7,13 @@ from matplotlib.widgets import Slider
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 import matplotlib.pyplot as plt
+from models.blackscholes import BSOpt
 
 plt.style.use("seaborn-dark")
 
-from models.blackscholes import BSOpt
-
 
 class PlotGUI:
-
-    def __init__(self, root) -> None:
+    def __init__(self, root):
         self.root = root
         self.root.title("Black Scholes playground")
         self.root.geometry("1350x850")
@@ -23,24 +21,19 @@ class PlotGUI:
         self.root.configure(bg=self.mainbg)
 
         # Left Frame
-        self.framel = tk.Frame(master=self.root,
-                               relief="flat",
-                               bg=self.mainbg,
-                               borderwidth=1)
+        self.framel = tk.Frame(
+            master=self.root, relief="flat", bg=self.mainbg, borderwidth=1
+        )
         self.framel.place(relx=0.02, rely=0.02, relwidth=0.23, relheight=0.95)
 
         # label setup
         self.lab_relief = "flat"
         self.lab_bg = self.mainbg
         self.lab_height = 1
-        self.lab_font = (
-            "Helvetica Neue",
-            14,
-            "normal"
-        )
+        self.lab_font = ("Helvetica Neue", 14, "normal")
 
         # Entry setup
-        self.ent_htick = (2, )
+        self.ent_htick = (2,)
         self.ent_bordw = 0
         self.ent_width = 13
         self.ent_font = ("Helvetica Neue", 14, "normal")
@@ -58,11 +51,7 @@ class PlotGUI:
         )
         self.label_CP.rowconfigure(row, weight=1, minsize=15)
         self.label_CP.columnconfigure(0, weight=1, minsize=15)
-        self.label_CP.grid(row=row,
-                           column=0,
-                           padx=25,
-                           pady=(45, 10),
-                           sticky="w")
+        self.label_CP.grid(row=row, column=0, padx=25, pady=(45, 10), sticky="w")
         self.entry_CP = tk.Entry(
             master=self.framel,
             width=self.ent_width,
@@ -73,11 +62,7 @@ class PlotGUI:
         )
         self.entry_CP.rowconfigure(row, weight=1, minsize=15)
         self.entry_CP.columnconfigure(0, weight=1, minsize=15)
-        self.entry_CP.grid(row=row,
-                           column=1,
-                           padx=20,
-                           pady=(45, 10),
-                           sticky="nsew")
+        self.entry_CP.grid(row=row, column=1, padx=20, pady=(45, 10), sticky="nsew")
         # default value
         self.entry_CP.insert(0, "C")
 
@@ -312,20 +297,16 @@ class PlotGUI:
         # ---------------------------------#
 
         # Right main box containing the interactive plot
-        self.framer = tk.Frame(master=self.root,
-                               bg="#80c1ff")  # '#80c1ff' or '#80cfff'
+        self.framer = tk.Frame(master=self.root, bg="#80c1ff")  # '#80c1ff' or '#80cfff'
         self.framer.place(relx=0.27, rely=0.02, relwidth=0.71, relheight=0.95)
 
         # setup plot Figure
         self.fig = plt.figure(facecolor="whitesmoke")
 
         # subplot spaces
-        plt.subplots_adjust(left=0.070,
-                            right=0.95,
-                            top=0.93,
-                            bottom=0.17,
-                            hspace=0.5,
-                            wspace=0.15)
+        plt.subplots_adjust(
+            left=0.070, right=0.95, top=0.93, bottom=0.17, hspace=0.5, wspace=0.15
+        )
 
         # setup the plot into the GUI
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.framer)
@@ -372,7 +353,7 @@ class PlotGUI:
         self.slider_v.on_changed(self.onslide)
 
     # ------------------------------------------#
-    #               definitions                #
+    #               definitions                 #
     # ------------------------------------------#
 
     def get_CP(self):
@@ -382,8 +363,8 @@ class PlotGUI:
         CP = str(self.entry_CP.get())
         if CP not in ["C", "P"]:
             messagebox.showerror(
-                "Option type error",
-                "Enter either 'C' or 'P' in the Call/Put field")
+                "Option type error", "Enter either 'C' or 'P' in the Call/Put field"
+            )
         else:
             return CP
 
@@ -395,13 +376,12 @@ class PlotGUI:
             K = float(self.entry_K.get())
             if K < 1:
                 messagebox.showerror(
-                    "Strike value error",
-                    "Enter at least a strike price equal to 1")
+                    "Strike value error", "Enter at least a strike price equal to 1"
+                )
             else:
                 return K
         except:
-            messagebox.showerror("Strike value error",
-                                 "Enter a valid strike price")
+            messagebox.showerror("Strike value error", "Enter a valid strike price")
 
     def get_T(self):
         """
@@ -463,13 +443,14 @@ class PlotGUI:
             v = float(self.entry_v.get())
             if v < 1:
                 # Returns a mininum volatility of 1%
-                messagebox.showerror("Volatility value error",
-                                     "Enter at least a volatility equal 1(%)")
+                messagebox.showerror(
+                    "Volatility value error", "Enter at least a volatility equal 1(%)"
+                )
             elif v > 100:
                 # Return a maximum volatility of 100%
                 messagebox.showerror(
-                    "Volatility value error",
-                    "Enter at least a volatility equal 100(%)")
+                    "Volatility value error", "Enter at least a volatility equal 100(%)"
+                )
             else:
                 return v / 100
         except:
@@ -493,11 +474,12 @@ class PlotGUI:
             else:
                 return q
         except:
-            messagebox.showerror("Dividend Yield value error",
-                                 "Enter a valid dividend yield value")
+            messagebox.showerror(
+                "Dividend Yield value error", "Enter a valid dividend yield value"
+            )
 
     @staticmethod
-    def get_Smin(K) -> None:
+    def get_Smin(K):
         """
         Automatic generation of a minimum underlying price (for plot)
         calculated as 60% below the input strike price
@@ -505,7 +487,7 @@ class PlotGUI:
         return round(K * (1 - 0.6), 0)
 
     @staticmethod
-    def get_Smax(K) -> None:
+    def get_Smax(K):
         """
         Automatic generation of a maximum underlying price (for plot)
         calculated as 60% above the input strike price
@@ -513,19 +495,15 @@ class PlotGUI:
         return round(K * (1 + 0.6), 0)
 
     @staticmethod
-    def get_Sset(Smin, Smax) -> np.ndarray:  # double check this return type!!
+    def get_Sset(Smin, Smax):
         """
         Generation of 150 underlying prices for the plots
         """
         return np.linspace(Smin, Smax, 150)
 
-    def define_slider(self,
-                      sliderax,
-                      labl="Slider",
-                      vmin=0,
-                      vmax=1,
-                      vstp=0.1,
-                      vini=0.5):
+    def define_slider(
+        self, sliderax, labl="Slider", vmin=0, vmax=1, vstp=0.1, vini=0.5
+    ):
         """
         Define slider for maturity values
         """
@@ -582,9 +560,7 @@ class PlotGUI:
         self.pic0.configure(image=self.img0)
 
         # message 2: where
-        self.message2 = """
-where
-        """
+        self.message2 = """"""
         self.text_box2.configure(text=self.message2)
 
         # updating formula for d1
@@ -601,8 +577,9 @@ where
 
         # plot the title
         plt.suptitle(
-            "BSM Options Pricing: {} Option".format("Call" if self.CP ==
-                                                    "C" else "Put"),
+            "BSM Options Pricing: {} Option".format(
+                "Call" if self.CP == "C" else "Put"
+            ),
             fontsize=15,
             fontweight="bold",
             color="k",
@@ -629,50 +606,38 @@ where
             self.vegas = [o.vega() for o in self.option]
 
             # Plot
-            (self.p0, ) = self.ax[0].plot(self.Sset,
-                                          self.prices,
-                                          color="tab:blue")
-            (self.p1, ) = self.ax[1].plot(self.Sset,
-                                          self.lambdas,
-                                          color="chocolate")
-            (self.p2, ) = self.ax[2].plot(self.Sset,
-                                          self.deltas,
-                                          color="tab:red")
-            (self.p3, ) = self.ax[3].plot(self.Sset,
-                                          self.gammas,
-                                          color="sandybrown")
-            (self.p4, ) = self.ax[4].plot(self.Sset, self.thetas, color="gray")
-            (self.p5, ) = self.ax[5].plot(self.Sset,
-                                          self.vegas,
-                                          color="forestgreen")
+            (self.p0,) = self.ax[0].plot(self.Sset, self.prices, color="tab:blue")
+            (self.p1,) = self.ax[1].plot(self.Sset, self.lambdas, color="chocolate")
+            (self.p2,) = self.ax[2].plot(self.Sset, self.deltas, color="tab:red")
+            (self.p3,) = self.ax[3].plot(self.Sset, self.gammas, color="sandybrown")
+            (self.p4,) = self.ax[4].plot(self.Sset, self.thetas, color="gray")
+            (self.p5,) = self.ax[5].plot(self.Sset, self.vegas, color="forestgreen")
 
             # set x-labels
             xfontsize = 9
-            self.ax[0].set_xlabel("Underlying $S$ (Strike={:.0f})".format(
-                self.K),
-                                  fontsize=xfontsize)
-            self.ax[1].set_xlabel("Underlying $S$ (Strike={:.0f})".format(
-                self.K),
-                                  fontsize=xfontsize)
-            self.ax[2].set_xlabel("Underlying $S$ (Strike={:.0f})".format(
-                self.K),
-                                  fontsize=xfontsize)
-            self.ax[3].set_xlabel("Underlying $S$ (Strike={:.0f})".format(
-                self.K),
-                                  fontsize=xfontsize)
-            self.ax[4].set_xlabel("Underlying $S$ (Strike={:.0f})".format(
-                self.K),
-                                  fontsize=xfontsize)
-            self.ax[5].set_xlabel("Underlying $S$ (Strike={:.0f})".format(
-                self.K),
-                                  fontsize=xfontsize)
+            self.ax[0].set_xlabel(
+                "Underlying $S$ (Strike={:.0f})".format(self.K), fontsize=xfontsize
+            )
+            self.ax[1].set_xlabel(
+                "Underlying $S$ (Strike={:.0f})".format(self.K), fontsize=xfontsize
+            )
+            self.ax[2].set_xlabel(
+                "Underlying $S$ (Strike={:.0f})".format(self.K), fontsize=xfontsize
+            )
+            self.ax[3].set_xlabel(
+                "Underlying $S$ (Strike={:.0f})".format(self.K), fontsize=xfontsize
+            )
+            self.ax[4].set_xlabel(
+                "Underlying $S$ (Strike={:.0f})".format(self.K), fontsize=xfontsize
+            )
+            self.ax[5].set_xlabel(
+                "Underlying $S$ (Strike={:.0f})".format(self.K), fontsize=xfontsize
+            )
 
             # set y-labels
             yfontsize = 9
             ycol = "k"
-            self.ax[0].set_ylabel("Price (USD)",
-                                  fontsize=yfontsize,
-                                  color=ycol)
+            self.ax[0].set_ylabel("Price (USD)", fontsize=yfontsize, color=ycol)
             self.ax[1].set_ylabel("Lambda", fontsize=yfontsize, color=ycol)
             self.ax[2].set_ylabel("Delta", fontsize=yfontsize, color=ycol)
             self.ax[3].set_ylabel("Gamma (%)", fontsize=yfontsize, color=ycol)
@@ -725,55 +690,66 @@ where
             idx = np.where(self.Sset >= self.K)[0][0]
             atm = self.Sset[idx]
             self.atmp = []
-            self.atmp.append(self.ax[0].scatter(
-                atm,
-                self.prices[idx],
-                c="k",
-                s=10,
-                marker="o",
-                label="ATM Price ({:.0f})".format(round(self.prices[idx], 2)),
-            ))
-            self.atmp.append(self.ax[1].scatter(
-                atm,
-                self.lambdas[idx],
-                c="k",
-                s=10,
-                marker="o",
-                label="ATM Lambda ({:.2f})".format(round(self.lambdas[idx],
-                                                         2)),
-            ))
-            self.atmp.append(self.ax[2].scatter(
-                atm,
-                self.deltas[idx],
-                c="k",
-                s=10,
-                marker="o",
-                label="ATM Delta ({:.2f})".format(round(self.deltas[idx], 2)),
-            ))
-            self.atmp.append(self.ax[3].scatter(
-                atm,
-                self.gammas[idx],
-                c="k",
-                s=10,
-                marker="o",
-                label="ATM Gamma ({:.2f})".format(round(self.gammas[idx], 2)),
-            ))
-            self.atmp.append(self.ax[4].scatter(
-                atm,
-                self.thetas[idx],
-                c="k",
-                s=10,
-                marker="o",
-                label="ATM Theta ({:.2f})".format(round(self.thetas[idx], 2)),
-            ))
-            self.atmp.append(self.ax[5].scatter(
-                atm,
-                self.vegas[idx],
-                c="k",
-                s=10,
-                marker="o",
-                label="ATM Vega ({:.2f})".format(round(self.vegas[idx], 2)),
-            ))
+            self.atmp.append(
+                self.ax[0].scatter(
+                    atm,
+                    self.prices[idx],
+                    c="k",
+                    s=10,
+                    marker="o",
+                    label="ATM Price ({:.0f})".format(round(self.prices[idx], 2)),
+                )
+            )
+            self.atmp.append(
+                self.ax[1].scatter(
+                    atm,
+                    self.lambdas[idx],
+                    c="k",
+                    s=10,
+                    marker="o",
+                    label="ATM Lambda ({:.2f})".format(round(self.lambdas[idx], 2)),
+                )
+            )
+            self.atmp.append(
+                self.ax[2].scatter(
+                    atm,
+                    self.deltas[idx],
+                    c="k",
+                    s=10,
+                    marker="o",
+                    label="ATM Delta ({:.2f})".format(round(self.deltas[idx], 2)),
+                )
+            )
+            self.atmp.append(
+                self.ax[3].scatter(
+                    atm,
+                    self.gammas[idx],
+                    c="k",
+                    s=10,
+                    marker="o",
+                    label="ATM Gamma ({:.2f})".format(round(self.gammas[idx], 2)),
+                )
+            )
+            self.atmp.append(
+                self.ax[4].scatter(
+                    atm,
+                    self.thetas[idx],
+                    c="k",
+                    s=10,
+                    marker="o",
+                    label="ATM Theta ({:.2f})".format(round(self.thetas[idx], 2)),
+                )
+            )
+            self.atmp.append(
+                self.ax[5].scatter(
+                    atm,
+                    self.vegas[idx],
+                    c="k",
+                    s=10,
+                    marker="o",
+                    label="ATM Vega ({:.2f})".format(round(self.vegas[idx], 2)),
+                )
+            )
 
             # set legend
             self.ax[0].legend()
@@ -799,7 +775,8 @@ where
                     current_r / 100,
                     current_v / 100,
                     q=self.q,
-                ) for s in self.Sset
+                )
+                for s in self.Sset
             ]
 
             # Get prices and greeks for all set of underlyings for new values of the sliders
@@ -820,71 +797,81 @@ where
 
             # set new axis
             # Price
-            self.ax[0].set_ylim([
-                min(self.prices) - 0.1 * max(self.prices),
-                max(self.prices) + 0.1 * max(self.prices),
-            ])
+            self.ax[0].set_ylim(
+                [
+                    min(self.prices) - 0.1 * max(self.prices),
+                    max(self.prices) + 0.1 * max(self.prices),
+                ]
+            )
 
             # Lambda
             if self.CP == "C":
                 if current_T != 0:
-                    M = self.lambdas[min(
-                        np.where(np.array(self.lambdas) < np.inf)
-                        [0])]  # possibly abs(np.inf()) or +np.inf()
-                    self.ax[1].set_ylim([
-                        min(self.lambdas) - 0.1 * min(self.lambdas),
-                        M + 0.1 * M
-                    ])
+                    M = self.lambdas[
+                        min(np.where(np.array(self.lambdas) < np.inf)[0])
+                    ]  # possibly abs(np.inf()) or +np.inf()
+                    self.ax[1].set_ylim(
+                        [min(self.lambdas) - 0.1 * min(self.lambdas), M + 0.1 * M]
+                    )
                 else:
                     self.ax[1].set_ylim(bottom=-1)
             else:
                 if current_T != 0:
-                    m = self.lambdas[max(
-                        np.where(np.array(self.lambdas) > -np.inf)[0])]
-                    self.ax[1].set_ylim([
-                        m + 0.1 * m,
-                        max(self.lambdas) - 0.1 * max(self.lambdas)
-                    ])
+                    m = self.lambdas[max(np.where(np.array(self.lambdas) > -np.inf)[0])]
+                    self.ax[1].set_ylim(
+                        [m + 0.1 * m, max(self.lambdas) - 0.1 * max(self.lambdas)]
+                    )
                 else:
                     self.ax[1].set_ylim(top=+1)
 
             # Delta
             if self.CP == "C":
-                self.ax[2].set_ylim([
-                    min(self.deltas) - 0.1 * max(self.deltas),
-                    max(self.deltas) + 0.1 * max(self.deltas),
-                ])
+                self.ax[2].set_ylim(
+                    [
+                        min(self.deltas) - 0.1 * max(self.deltas),
+                        max(self.deltas) + 0.1 * max(self.deltas),
+                    ]
+                )
             else:
-                self.ax[2].set_ylim([
-                    min(self.deltas) + 0.1 * min(self.deltas),
-                    max(self.deltas) - 0.1 * min(self.deltas),
-                ])
+                self.ax[2].set_ylim(
+                    [
+                        min(self.deltas) + 0.1 * min(self.deltas),
+                        max(self.deltas) - 0.1 * min(self.deltas),
+                    ]
+                )
 
             # Gamma
             if current_T != 0:
-                self.ax[3].set_ylim([
-                    min(self.gammas) - 0.1 * max(self.gammas),
-                    max(self.gammas) + 0.1 * max(self.gammas),
-                ])
+                self.ax[3].set_ylim(
+                    [
+                        min(self.gammas) - 0.1 * max(self.gammas),
+                        max(self.gammas) + 0.1 * max(self.gammas),
+                    ]
+                )
 
             # Theta
             if current_T != 0:
                 self.ax[4].set_ylim(
                     bottom=min(self.thetas) + 0.5 * min(self.thetas)
-                    if min(self.thetas) < 0 else min(self.thetas) -
-                    0.5 * min(self.thetas))
-                self.ax[4].set_ylim(top=max(self.thetas) -
-                                    max(self.thetas) if max(self.thetas) < 0
-                                    else max(self.thetas) + max(self.thetas))
+                    if min(self.thetas) < 0
+                    else min(self.thetas) - 0.5 * min(self.thetas)
+                )
+                self.ax[4].set_ylim(
+                    top=max(self.thetas) - max(self.thetas)
+                    if max(self.thetas) < 0
+                    else max(self.thetas) + max(self.thetas)
+                )
             else:
                 self.ax[4].set_ylim([-5, 1])
 
             # Vega
             if current_T != 0:
-                self.ax[4].set_ylim([
-                    min(self.vegas) - 0.1 * max(self.vegas),
-                    max(self.vegas) + 0.1 * max(self.vegas),
-                ])
+                self.ax[4].set_ylim(
+                    [
+                        min(self.vegas) - 0.1 * max(self.vegas),
+                        max(self.vegas) + 0.1 * max(self.vegas),
+                    ]
+                )
 
             # Plot the ATM price or greek (put in legend..)
             self.setlegend()

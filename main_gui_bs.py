@@ -7,10 +7,10 @@ from src.guisliders import PlotGUI
 
 
 def main_gui():
-	root = tk.Tk()
-	Gui = PlotGUI(root)
-	Gui.root.mainloop()
+    root = tk.Tk()
+    Gui = PlotGUI(root)
+    Gui.root.mainloop()
 
 
 if __name__ == "__main__":
-	main_gui()
+    main_gui()
